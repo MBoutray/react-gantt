@@ -92,10 +92,14 @@ const Gantt = ({ customize, data }) => {
         </div>
       </div>
       {
-        <GanttViewProject
+        <GanttViewPerso
           customize={styles}
           data={data}
         />
+        // <GanttViewProject
+        //   customize={styles}
+        //   data={data}
+        // />
       }
     </div>
   );

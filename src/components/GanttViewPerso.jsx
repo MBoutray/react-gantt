@@ -12,7 +12,7 @@ import AllProjectsLine from "./AllProjectsLine";
 
 import Icon from '../assets/pictos/arrow-left.svg';
 
-const GanttViewPerso = ({ customize, data }) => {
+const GanttViewPerso = ({ customize, data, displayedUserId }) => {
   const defaultStyles = {
     sidebarProjects: {
       background: '#fff',
@@ -26,26 +26,26 @@ const GanttViewPerso = ({ customize, data }) => {
     },
   };
 
-  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState([]);
   const [projects, setProjects] = useState([]);
   const [previousTasks, setPreviousTasks] = useState([]);
   const [selectedDropdownId, setSelectedDropdownId] = useState(null);
   // const [timelineWeeks, setTimelineWeeks] = useState([]);
 
-  const getUsers = useCallback(() => {
-    setUsers(data && data.users ? data.users : []);
+  const getUser = useCallback(() => {
+    setUser(data && data.users ? [data.users.find(_user => _user.id === displayedUserId)] : []);
   }, [data]);
 
   useEffect(() => {
-    if (users.length > 0) {
-      setProjects(getProjects(users))
+    if (user.length > 0) {
+      setProjects(getProjects(user))
     }
-  }, [users]);
+  }, [user]);
 
   useEffect(() => {
-    getUsers();
+    getUser();
     setPreviousTasks([]);
-  }, [getUsers]);
+  }, [getUser]);
 
   const toggleDropdown = (id) => {
     if (selectedDropdownId === id) {
@@ -66,7 +66,7 @@ const GanttViewPerso = ({ customize, data }) => {
   return (
     <section className="gantt-container-section">
       <div className="gantt-container-section-timeline">
-        <GanttTimelineHeader users={users} styleData={styles} />
+        <GanttTimelineHeader users={user} styleData={styles} />
       </div>
 
       <div className="gantt-container-section-sidebar">
@@ -79,7 +79,7 @@ const GanttViewPerso = ({ customize, data }) => {
           >
             <GanttSidebar styleData={styles} data={project} selectedDropdownId={selectedDropdownId} toggleDropdown={toggleDropdown} view="project" />
 
-            <GanttTaskContainer users={users} selectedDropdownId={selectedDropdownId} project={project} styleData={styles} previousTasks={previousTasks} />
+            <GanttTaskContainer users={user} selectedDropdownId={selectedDropdownId} project={project} styleData={styles} previousTasks={previousTasks} />
 
             {/* <div className="gantt-container-section-sidebar-tasks project" style={defaultStyles.sidebarProjects}>
               <div className="gantt-container-section-sidebar-task">
